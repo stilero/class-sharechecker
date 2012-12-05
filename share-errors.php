@@ -23,8 +23,11 @@ class ShareErrors{
     public static $ERROR_TYPE_WARNING = 'warning';
     
     
-    public function setError($type, $message){
-        $this->errors[] = array($type => $message);
+    public function setError($type, $message, $details=''){
+        $this->errors[] = array(
+            $type => $message,
+            'details' => $details
+            );
     }
     
     public function hasError(){

@@ -60,6 +60,17 @@ class ShareChecker extends ShareLogger{
     }
     
     /**
+     * Convenient method for asserting that a boolean is false
+     * @param boolean $boolActual
+     * @param String $errorType
+     * @param String $errorMsg
+     * @return boolean
+     */
+    protected function isFalse($boolActual, $errorType, $errorMsg){
+        return $this->isTrue(!$boolActual, $errorType, $errorMsg);
+    }
+    
+    /**
      * Convenient method for asserting that a value is bigger than the other
      * @param integer $bigger
      * @param integer $smaller
@@ -83,7 +94,7 @@ class ShareChecker extends ShareLogger{
      * @return boolean
      */
     public function isPublished() {
-        return $this->isTrue($this->_JArticle->isPublished, self::$ERROR_TYPE_NOTICE, $this->_plgLangPrefix.'NOTACTIVE');
+        return $this->isTrue($this->_article->isPublished, self::$ERROR_TYPE_NOTICE, $this->_plgLangPrefix.'NOTACTIVE');
     }
     
     /**
@@ -91,7 +102,7 @@ class ShareChecker extends ShareLogger{
      * @return boolean
      */
     public function isArticle() {
-        $isNumeric = is_numeric($this->_JArticle->id);
+        $isNumeric = is_numeric($this->_article->id);
         return $this->isTrue($isNumeric, self::$ERROR_TYPE_ERROR, 'NOT_OBJECT');
     }
     
@@ -100,7 +111,7 @@ class ShareChecker extends ShareLogger{
      * @return boolean
      */
     public function isNewEnough() {
-        $publishDate = $this->_JArticle->publish_up;
+        $publishDate = $this->_article->publish_up;
         if($this->_shareNewerThanDate == '' || $publishDate == '0000-00-00 00:00:00'){
             return true;
         }
@@ -112,7 +123,7 @@ class ShareChecker extends ShareLogger{
      * @return boolean
      */
     public function isPublic(){
-        return $this->isTrue($this->_JArticle->isPublic, self::$ERROR_TYPE_NOTICE, 'RESTRICT');
+        return $this->isTrue($this->_article->isPublic, self::$ERROR_TYPE_NOTICE, 'RESTRICT');
     }
     
     /**
@@ -128,7 +139,7 @@ class ShareChecker extends ShareLogger{
         if($this->_categoriesFunction == self::$CATS_FUNCTION_EXCLUDE){
             $include = false;
         }
-        $catid = $this->_JArticle->catid;
+        $catid = $this->_article->catid;
         $foundInCats = in_array( $catid, $categories );
         if($include){
             return $this->isTrue(!$foundInCats, self::$ERROR_TYPE_NOTICE, 'NOTSECTION');
@@ -167,6 +178,6 @@ class ShareChecker extends ShareLogger{
      */
     public function isShared(){
         $isShared = $this->isLogged();
-        return $this->isTrue($isShared, self::$ERROR_TYPE_NOTICE, 'ALREADYSENT');
+        return $this->isFalse($isShared, self::$ERROR_TYPE_NOTICE, 'ALREADYSENT2');
     }
 }
